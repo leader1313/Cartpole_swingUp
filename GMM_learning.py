@@ -35,7 +35,7 @@ for n in range(10):
 #==================== random initialize parameter =======================
 
     K = 1                                       # solution 수
-    M = 20                                    # Number of model
+    M = 15                                    # Number of model
     GM = GMLRM(X,Y,K,M)
     Weight ,var = GM.EM()
     learner = {'model': GM, 'Weight': Weight, 'var' : var}

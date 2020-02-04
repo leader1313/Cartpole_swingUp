@@ -6,7 +6,7 @@ import numpy as np
 
 def main():
     plt.style.use("ggplot")
-    episode_num = 10
+    episode_num = 20
     graph = {'loss': [],
              'episode_num' : []}
 

@@ -7,7 +7,7 @@ from gym_cartpole_swingup.envs import CartPoleSwingUpEnv
 
 env = CartPoleSwingUpEnv()
 initialize = {}
-max_episode = 10
+max_episode = 20
 test_time = 100
 graph =  {
             'episode_num': [],

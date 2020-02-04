@@ -5,7 +5,7 @@ from numpy.linalg import inv, det, pinv
 
 class GMLRM:
     def __init__(self, X, Y, K, M):
-        self.X , self.Range = self.normalization(X)
+        self.X , self.Range, self.Max, self.Min = self.normalization(X)
         self.Y = Y
         self.D = X.shape[1]
         self.N = len(X)
@@ -23,14 +23,16 @@ class GMLRM:
         D = x.shape[1]
         N = x.shape[0]
         X = np.zeros((N,D))
+        Max = np.zeros(D)
+        Min = np.zeros(D)
         Range = np.zeros(D)
         for d in range(D):
-            Max = max(x[:,d])
-            Min = min(x[:,d])
-            Range[d] = Max - Min
+            Max[d] = max(x[:,d])*100
+            Min[d] = min(x[:,d])*100
+            Range[d] = Max[d] - Min[d]
             for n in range(N):
-                X[n,d] = x[n,d]/Range[d]
-        return X, Range
+                X[n,d] = (x[n,d]- Min[d])/Range[d]
+        return X, Range, Max, Min
 
 
     def dot(self,x,y,z):
@@ -137,7 +139,7 @@ class GMLRM:
         predict = np.zeros(self.K)
         X       = np.zeros(self.D)
         for d in range(self.D):
-            X[d] = new_X[d]/self.Range[d]
+            X[d] = (new_X[d]- self.Min[d]) /self.Range[d]
         mean = self.M/2
         for m in range(self.M):
             new_phi[m] = self.cal_phi(X,(m-mean)/self.M)

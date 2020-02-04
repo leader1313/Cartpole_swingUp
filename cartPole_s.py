@@ -57,7 +57,7 @@ while 1 :
         elif total_timesteps > 500 :
             break
         env.render()
-        time.sleep(0.1)
+        time.sleep(0.05)
         print("[%i]timesteps  reward %0.2f" % (total_timesteps, total_reward))
     if episode_num > max_episode :
         break
