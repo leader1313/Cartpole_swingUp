@@ -7,16 +7,14 @@ import numpy as np
 def main():
     plt.style.use("ggplot")
     episode_num = 20
-    graph = {'loss': [],
-             'episode_num' : []}
 
     learning = {'state': [0,0,0,0],
                 'action': [],
                 'dataset': []}
     for i in range(episode_num) :
-        
+        data_Num = i+1
         #load pickle file
-        with open('data/sup_demo'+str(i+1)+'.pickle', 'rb') as handle:
+        with open('data/sup_demo'+str(data_Num)+'.pickle', 'rb') as handle:
             results = pickle.load(handle)
         
         # ==============================================
@@ -56,12 +54,14 @@ def main():
 
         kern = GaussianKernel()
         model = GPRegression(train_X, train_Y, kern)
-
-        print("params", torch.exp(model.kern.param()[0]), torch.exp(model.sigma), model.negative_log_likelihood())
+        #model learning
         model.learning()
-        print("params", torch.exp(model.kern.param()[0]), torch.exp(model.sigma), model.negative_log_likelihood())
-        PATH = 'model/learner_'+str(i+1)
+        #model save
+        PATH = 'model/learner_'+str(data_Num)
         torch.save(model, PATH)
+        print("++"*30)
+        print("Episode " + str(data_Num) + " learner saved")
+        print("++"*30)
     
 
 if __name__=="__main__":

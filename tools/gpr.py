@@ -56,8 +56,12 @@ class GPRegression:
       #   return f
       # optimizer.step(closure)
       optimizer.step()
+      if i%100 == 0 :
+        print("+",end='')
+    print("\n")
     self.compute_grad(False)
-    print('params:', torch.exp(self.kern.param()[0]), torch.exp(self.sigma))
+
+    
     
 
 if __name__=="__main__":

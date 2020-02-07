@@ -36,7 +36,7 @@ for i in range(max_episode) :
         while not done:
             total_timesteps += 1
         #GMM_model
-            # action = 1*model.predict(obs,Weight)
+            # action = model.predict(obs,Weight)
         #GP_model    
             obser = obs[None,...]
             te_obser = torch.from_numpy(obser).float()

@@ -16,7 +16,7 @@ class GMLRM:
         self.var = np.zeros(1)+2                              # variance
 
         self.Phi = np.zeros((self.N,self.M))
-        self.phi_mean = np.zeros(self.D)+0.5
+        self.phi_mean = np.zeros(self.D)+ 2
         self.phi_sigma = np.diag((np.zeros(self.D)+1))
 
     def normalization(self,x):
@@ -27,8 +27,8 @@ class GMLRM:
         Min = np.zeros(D)
         Range = np.zeros(D)
         for d in range(D):
-            Max[d] = max(x[:,d])*100
-            Min[d] = min(x[:,d])*100
+            Max[d] = max(x[:,d])
+            Min[d] = min(x[:,d])
             Range[d] = Max[d] - Min[d]
             for n in range(N):
                 X[n,d] = (x[n,d]- Min[d])/Range[d]
@@ -64,9 +64,8 @@ class GMLRM:
 
     def Init_phi(self):
         for m in range(self.M):
-            mean = self.M/2
             for n in range(self.N):
-                self.Phi[n,m] = self.cal_phi(self.X[n], (m-mean)/self.M)
+                self.Phi[n,m] = self.cal_phi(self.X[n], m/self.M)
         return self.Phi
 
     def responsibility(self, n, k, Weight, Phi, var, prior):
@@ -92,14 +91,13 @@ class GMLRM:
                 R[k,n,n] = r[n,k]
         return r, R
 
-    def maximization(self, r, R):
+    def maximization(self, r, R, Phi):
         N = self.N
         K = self.K
         Y = self.Y
         prior = self.prior
         Weight = self.Weight
         var = self.var
-        Phi = self.Init_phi()
         sum_r = np.zeros(K)
         sum_rd = np.zeros(1)
         for k in range(K):
@@ -128,10 +126,12 @@ class GMLRM:
         Weight = self.Weight
         var = self.var
         Phi = self.Init_phi()
-        T = 100
+        T = 1000
         for t in range(T):
             r, R = self.expectation(prior,Weight,Phi,var)
-            prior, Weight, var = self.maximization(r, R)
+            prior, Weight, var = self.maximization(r, R, Phi)
+            print("=",end='')
+        print("\n")
         return Weight, var
 
     def predict(self, new_X, Weight):
@@ -140,9 +140,9 @@ class GMLRM:
         X       = np.zeros(self.D)
         for d in range(self.D):
             X[d] = (new_X[d]- self.Min[d]) /self.Range[d]
-        mean = self.M/2
+        
         for m in range(self.M):
-            new_phi[m] = self.cal_phi(X,(m-mean)/self.M)
+            new_phi[m] = self.cal_phi(X,m/self.M)
         for k in range(self.K):
             predict[k] = np.dot(Weight[:,k].T,new_phi)
         return predict
