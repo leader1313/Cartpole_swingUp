@@ -11,16 +11,17 @@ class GPRegression:
 
 
   def predict(self, x):
-    Kx = self.kern.K(x)
+    # Kx = self.kern.K(x)
     Kxx = self.kern.K(self.X, x)
     K = self.kern.K(self.X)
 
     sig = torch.exp(self.sigma)
 
     mean = Kxx.t().mm(torch.solve(self.Y, K+torch.eye(K.shape[0])*sig)[0])
-    sigma = torch.diag(Kx - Kxx.t().mm(torch.solve(Kxx, K+torch.eye(K.shape[0])*sig)[0])).reshape(x.shape[0], -1) + sig
+    # sigma = torch.diag(Kx - Kxx.t().mm(torch.solve(Kxx, K+torch.eye(K.shape[0])*sig)[0])).reshape(x.shape[0], -1) + sig
 
-    return mean, sigma
+    # return mean, sigma
+    return mean
   
   def compute_grad(self, flag):
     self.sigma.requires_grad = flag
@@ -56,9 +57,6 @@ class GPRegression:
       #   return f
       # optimizer.step(closure)
       optimizer.step()
-      if i%100 == 0 :
-        print("+",end='')
-    print("\n")
     self.compute_grad(False)
 
     
@@ -98,9 +96,9 @@ if __name__=="__main__":
   plt.plot(xx, mm-ss, "--", color=line[0].get_color())
   plt.show()
 
-  print("params", torch.exp(model.kern.param()[0]), torch.exp(model.sigma), model.negative_log_likelihood())
+  # print("params", torch.exp(model.kern.param()[0]), torch.exp(model.sigma), model.negative_log_likelihood())
   model.learning()
-  print("params", torch.exp(model.kern.param()[0]), torch.exp(model.sigma), model.negative_log_likelihood())
+  # print("params", torch.exp(model.kern.param()[0]), torch.exp(model.sigma), model.negative_log_likelihood())
 
   xx = np.linspace(0, np.pi*2, 100)[:,None]
   xx = torch.from_numpy(xx).float()

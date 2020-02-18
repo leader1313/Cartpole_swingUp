@@ -7,11 +7,12 @@ from gym_cartpole_swingup.envs import CartPoleSwingUpEnv
 
 env = CartPoleSwingUpEnv()
 initialize = {}
-max_episode = 20
-test_time = 100
+max_episode = 10
+test_time = 10
 graph =  {
             'episode_num': [],
-            'success': [],
+            # 'success': [],
+            'total_reward': [],
             }
 for i in range(max_episode) :
     print("++"*30)
@@ -28,6 +29,7 @@ for i in range(max_episode) :
     PATH = 'model/learner_'+str(i+1)
     model = torch.load(PATH)
     success = 0
+    reward = 0
     for t in range(test_time):
         done = 0
         total_reward = 0
@@ -40,7 +42,7 @@ for i in range(max_episode) :
         #GP_model    
             obser = obs[None,...]
             te_obser = torch.from_numpy(obser).float()
-            learner_action, _ = model.predict(te_obser)
+            learner_action = model.predict(te_obser)
             
             action = learner_action
 
@@ -51,16 +53,24 @@ for i in range(max_episode) :
             if total_reward > 100 :
                 success += 1
                 break
-            elif total_timesteps > 500 :
+            if total_timesteps > 500 :
                 break
             env.render()
             # time.sleep(0.1)
-            # print("[%i]timesteps  reward %0.2f" % (total_timesteps, total_reward))
+            print("[%i]timesteps  reward %0.2f" % (total_timesteps, total_reward))
         print('No. %i test Finished success : %i' %(t+1, success))
+        # print('No. %i test Finished total_reward : %i' %(t+1, total_reward))
+        # reward += total_reward
     graph['success'].append(success)
+    # reward = reward/test_time
+    # graph['total_reward'].append(reward)
+    print("-"*30)
+    print('No. %i Episode Mean_reward : %i' %(i+1, reward))
+    print("_"*30)
 plt.figure()
 X = graph['episode_num']
 Y = graph['success']
+# Y = graph['total_reward']
 plt.xlabel("episode_num")
 plt.ylabel("success_rate")
 plt.plot(X, Y, "*")

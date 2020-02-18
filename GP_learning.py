@@ -6,7 +6,7 @@ import numpy as np
 
 def main():
     plt.style.use("ggplot")
-    episode_num = 20
+    episode_num = 30
 
     learning = {'state': [0,0,0,0],
                 'action': [],
@@ -61,6 +61,7 @@ def main():
         torch.save(model, PATH)
         print("++"*30)
         print("Episode " + str(data_Num) + " learner saved")
+        print("data length : %i"%(len(train_Y)))
         print("++"*30)
     
 
