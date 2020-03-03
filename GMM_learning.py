@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #-*- coding:utf-8 -*-
 import pickle
 from tools.GMLRM import GMLRM
@@ -30,15 +31,14 @@ for n in range(10):
     N = learning['state'].shape[0]
     X = learning['state']
     Y = learning['action']
-
-
-#==================== random initialize parameter =======================
-
+   
+# #==================== random initialize parameter =======================
+    T = 300
     K = 1                                       # solution 수
-    M = 10                                    # Number of model
-    GM = GMLRM(X,Y,K,M)
-    Weight ,var = GM.EM()
-    learner = {'model': GM, 'Weight': Weight, 'var' : var}
+    M = 3                                    # Number of model
+    GM = GMLRM(X,Y,K,M,T)
+    GM.EM()
+    learner = {'model': GM}
     print("="*40)
     with open('model/learner'+str(n+1)+'.pickle', 'wb') as handle:
         pickle.dump(learner, handle, protocol=pickle.HIGHEST_PROTOCOL)

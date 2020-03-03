@@ -20,14 +20,13 @@ for i in range(max_episode) :
     print("++"*30)
     graph['episode_num'].append(i+1)
 #load GMM_model    
-    # with open('model/learner'+ str(i+1) + '.pickle', 'rb') as f:
-    #     learner = pickle.load(f)
-    # model = learner['model']
-    # Weight = learner['Weight']
-    # var = learner['var']
+    with open('model/learner'+ str(i+10) + '.pickle', 'rb') as f:
+        learner = pickle.load(f)
+    model = learner['model']
+    
 #load GP_model
-    PATH = 'model/learner_'+str(i+1)
-    model = torch.load(PATH)
+    # PATH = 'model/learner_'+str(i+1)
+    # model = torch.load(PATH)
     success = 0
     reward = 0
     for t in range(test_time):
@@ -38,13 +37,13 @@ for i in range(max_episode) :
         while not done:
             total_timesteps += 1
         #GMM_model
-            # action = model.predict(obs,Weight)
+            action = model.predict(obs)
         #GP_model    
-            obser = obs[None,...]
-            te_obser = torch.from_numpy(obser).float()
-            learner_action = model.predict(te_obser)
+            # obser = obs[None,...]
+            # te_obser = torch.from_numpy(obser).float()
+            # learner_action = model.predict(te_obser)
             
-            action = learner_action
+            # action = learner_action
 
             # print('\t [Action] : ',action)
             obs, rew, done, info = env.step(action)
@@ -53,11 +52,11 @@ for i in range(max_episode) :
             if total_reward > 100 :
                 success += 1
                 break
-            if total_timesteps > 500 :
+            if total_timesteps > 1000 :
                 break
             env.render()
             # time.sleep(0.1)
-            print("[%i]timesteps  reward %0.2f" % (total_timesteps, total_reward))
+            # print("[%i]timesteps  reward %0.2f" % (total_timesteps, total_reward))
         print('No. %i test Finished success : %i' %(t+1, success))
         # print('No. %i test Finished total_reward : %i' %(t+1, total_reward))
         # reward += total_reward
